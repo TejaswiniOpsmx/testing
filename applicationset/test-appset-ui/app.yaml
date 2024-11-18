@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-appset-ui
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+            targetRevision: main
+            path: apps-resources/test-app-ui
+            helm:
+              valueFiles:
+                - values.yaml
+  template:
+    metadata:
+      name: '{{appName}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{repoURL}}'
+        targetRevision: '{{targetRevision}}'
+        path: '{{path}}'
+        helm:
+          valueFiles:
+            - '{{helm.valueFiles}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            environment: qa
+    - git:
+        repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+        directories:
+          - path: apps-resources/test-app-ui
+  template:
+    metadata:
+      name: test-app-ui-{{name}}
+    spec:
+      project: qa-environment
+      source:
+        repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+        targetRevision: main
+        path: apps-resources/test-app-ui
+        helm:
+          valueFiles:
+            - values.yaml
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: '{{name}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
