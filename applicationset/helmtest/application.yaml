@@ -8,7 +8,7 @@ spec:
     namespace: sample-helm 
     server: 'https://kubernetes.default.svc'
   source:
-    repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+    repoURL: 'https://github.com/TejaswiniOpsmx/testing.git'
     path: v03-argocd-applications/helm/nginx
     targetRevision: main
     helm:
