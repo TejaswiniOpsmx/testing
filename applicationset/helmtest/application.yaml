@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: single-helm-app-non-prod
+  namespace: argocd
+spec:
+  destination:
+    namespace: proj6-non-prod-env-single-helm
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+    path: apps-resources/single-helm-resource
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+  project: non-prod-envoronment
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
