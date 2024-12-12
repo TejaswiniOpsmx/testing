@@ -5,16 +5,16 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: proj6-non-prod-env-single-helm
+    namespace: sample-helm 
     server: 'https://kubernetes.default.svc'
   source:
     repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
-    path: apps-resources/single-helm-resource
+    path: v03-argocd-applications/helm/nginx
     targetRevision: main
     helm:
       valueFiles:
         - values.yaml
-  project: non-prod-envoronment
+  project: default
   syncPolicy:
     automated:
       prune: true
